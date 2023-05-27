@@ -1,6 +1,6 @@
 
   // Підключення бібліотеки Notiflix
-  Notiflix = require('notiflix');
+  const notiflix = require('notiflix');
 
   function createPromise(position, delay) {
     const shouldResolve = Math.random() > 0.3;
@@ -14,27 +14,32 @@
       }, delay);
     });
   }
-    
-    
- document.querySelector('.form').addEventListener('submit', function (event) {
+
+  document.querySelector('.form').addEventListener('submit', function (event) {
     event.preventDefault();
+    const delayInput = document.querySelector('input[name="delay"]');
+    const stepInput = document.querySelector('input[name="step"]');
+    const amountInput = document.querySelector('input[name="amount"]');
+    const delay = parseInt(delayInput.value);
+    const step = parseInt(stepInput.value);
+    const amount = parseInt(amountInput.value);
 
-    const firstDelay = Number(this.elements.delay.value);
-    const step = Number(this.elements.step.value);
-    const amount = Number(this.elements.amount.value);
-
-    let delay = firstDelay;
+    let currentDelay = delay;
+    let currentStep = step;
 
     for (let i = 1; i <= amount; i++) {
-      createPromise(i, delay)
+      createPromise(i, currentDelay)
         .then(({ position, delay }) => {
-          Notiflix.Notify.Success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+          notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
         })
         .catch(({ position, delay }) => {
-          Notiflix.Notify.Failure(`❌ Rejected promise ${position} in ${delay}ms`);
+          notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
         });
 
-      delay += step;
+      currentDelay += currentStep;
     }
-  });
 
+    delayInput.value = '';
+    stepInput.value = '';
+    amountInput.value = '';
+  })
